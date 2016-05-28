@@ -1,0 +1,2 @@
+# infinigrid
+Infiniteˣ hexagon grid
