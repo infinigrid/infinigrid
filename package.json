@@ -1,0 +1,54 @@
+{
+  "name": "infinigrid",
+  "productName": "Infinigrid",
+  "version": "1.0.0",
+  "description": "Infiniteˣ hexagon grid",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "test": "mocha --compilers js:babel-register"
+  },
+  "repository": "johnsusi/infinigrid",
+  "author": "John Susi <john@susi.se> (https://github.com/johnsusi/)",
+  "license": "MIT",
+  "bugs": "https://github.com/johnsusi/infinigrid/issues",
+  "homepage": "https://github.com/johnsusi/infinigrid#readme",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "gl-react": "^2.2.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "babel-plugin-uglify": "^1.0.2",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.5.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1",
+    "dotenv": "^2.0.0",
+    "enzyme": "^2.3.0",
+    "exorcist": "^0.4.0",
+    "hamljs": "^0.6.2",
+    "mocha": "^2.5.3",
+    "parcelify": "^2.1.0",
+    "react": "^15.1.0",
+    "react-addons-test-utils": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "shelljs": "^0.7.0",
+    "sinon": "^1.17.4",
+    "uglify-js": "^2.6.2",
+    "watchify": "^3.7.0"
+  },
+  "peerDependencies": {
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0"
+  },
+  "babel": {
+    "presets": [
+      "react",
+      "es2015"
+    ],
+    "plugins": []
+  }
+}
