@@ -6,7 +6,9 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist --ignore src/infinigrid.js",
+    "build:watch": "npm run build -- -w",
     "bundle": "browserify ./src/index.js --standalone Infinigrid -d -t [babelify] | exorcist dist/infinigrid.js.map > dist/infinigrid.js && uglifyjs ./dist/infinigrid.js -c -m --in-source-map ./dist/infinigrid.js.map --source-map ./dist/infinigrid.min.js.map --source-map-url infinigrid.min.js.map > dist/infinigrid.min.js",
+    "bundle:watch": "watchify ./src/index.js --standalone Infinigrid -d -t [babelify] -o dist/infinigrid.js",
     "test": "mocha --compilers js:babel-register",
     "preversion": "npm test",
     "version": "npm run build && npm run bundle",
@@ -43,5 +45,8 @@
     "plugins": [
       "transform-object-rest-spread"
     ]
+  },
+  "dependencies": {
+    "gl-matrix": "^2.3.2"
   }
 }
