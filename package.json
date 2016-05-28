@@ -1,7 +1,7 @@
 {
   "name": "infinigrid",
   "productName": "Infinigrid",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Infiniteˣ hexagon grid",
   "main": "dist/index.js",
   "scripts": {
