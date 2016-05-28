@@ -1,7 +1,7 @@
 {
   "name": "infinigrid",
   "productName": "Infinigrid",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Infiniteˣ hexagon grid",
   "main": "dist/index.js",
   "scripts": {
@@ -37,8 +37,7 @@
     "uglify-js": "^2.6.2",
     "watchify": "^3.7.0"
   },
-  "peerDependencies": {
-  },
+  "peerDependencies": {},
   "babel": {
     "presets": [
       "react",
