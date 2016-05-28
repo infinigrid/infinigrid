@@ -16,9 +16,6 @@
   "files": [
     "dist"
   ],
-  "dependencies": {
-    "gl-react": "^2.2.1"
-  },
   "devDependencies": {
     "babel-cli": "^6.9.0",
     "babel-plugin-uglify": "^1.0.2",
@@ -41,8 +38,6 @@
     "watchify": "^3.7.0"
   },
   "peerDependencies": {
-    "react": "^15.1.0",
-    "react-dom": "^15.1.0"
   },
   "babel": {
     "presets": [
