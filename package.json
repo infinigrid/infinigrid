@@ -6,7 +6,10 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist",
-    "test": "mocha --compilers js:babel-register"
+    "test": "mocha --compilers js:babel-register",
+    "preversion": "npm test",
+    "version": "npm run build",
+    "postversion": "git push && git push --tags && npm publish"
   },
   "repository": "johnsusi/infinigrid",
   "author": "John Susi <john@susi.se> (https://github.com/johnsusi/)",
