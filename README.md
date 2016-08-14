@@ -3,6 +3,7 @@ Infiniteˣ hexagon grid
 
 https://infinigrid.github.io/
 
+**Note: This is still work in progress!**
 
 ## Build examples
 
