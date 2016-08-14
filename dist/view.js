@@ -78,6 +78,7 @@ var View = exports.View = function (_React$Component) {
       var canvas = this.canvas;
       var gl = canvas.getContext("webgl");
 
+      this.model = {};
       if (!gl) return;
 
       var devicePixelRatio = window.devicePixelRatio || 1;
@@ -124,11 +125,10 @@ var View = exports.View = function (_React$Component) {
     }
   }, {
     key: 'update',
-    value: function update(width, height, _ref) {
-      var transform = _ref.transform;
-      var map = _ref.map;
-      var gridColorStrategy = _ref.gridColorStrategy;
-      var gridSizeStrategy = _ref.gridSizeStrategy;
+    value: function update(width, height, model) {
+      if (!model) return;
+      var transform = model.transform;
+      var map = model.map;
 
       var gl = this.canvas.getContext("webgl");
       if (!gl) return;
@@ -156,17 +156,25 @@ var View = exports.View = function (_React$Component) {
 
       var d = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 
-      gl.uniform4f.apply(gl, [gl.getUniformLocation(this.shaderProgram, "u_EDGE_COLOR")].concat(_toConsumableArray(gridColorStrategy())));
-      gl.uniform1f(gl.getUniformLocation(this.shaderProgram, "u_EDGE"), gridSizeStrategy());
+      gl.uniform4f.apply(gl, [gl.getUniformLocation(this.shaderProgram, "u_EDGE_COLOR")].concat(_toConsumableArray(model.gridColorStrategy())));
+      gl.uniform1f(gl.getUniformLocation(this.shaderProgram, "u_EDGE"), model.gridSizeStrategy());
 
       if (!map) return;
-      if (map != this.map) {
+      if (model.map != this.model.map) {
+
+        if (model.repeat != this.model.repeat) {
+          var mode = model.repeat;
+          var modeS = mode == 'repeat' || mode == 'repeat-q' ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+          var modeT = mode == 'repeat' || mode == 'repeat-r' ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, modeS);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, modeT);
+        }
+
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, map.width, map.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, map.data);
         gl.uniform1i(gl.getUniformLocation(this.shaderProgram, "u_N"), map.width);
-        this.map = map;
       }
-
       gl.drawArrays(gl.TRIANGLES, 0, 6);
+      this.model = model;
     }
   }, {
     key: 'shouldComponentUpdate',

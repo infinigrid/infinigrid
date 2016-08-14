@@ -1,6 +1,6 @@
 const React = require('react');
 
-const { mat2d } = require('gl-matrix');
+const { vec2 } = require('gl-matrix');
 
 export class Viewport extends React.Component {
 
@@ -105,13 +105,18 @@ export class Viewport extends React.Component {
     const height = this.state.height;
     const zIndex = this.props.zIndex || 0;
     const model  = this.state.model;
+    const children = this.props.children;
+    const transform = point => vec2.transformMat2d([,,], point, model.transform);
+    const childProps = i => ({
+      width,
+      height,
+      model,
+      transform,
+      style: { position: 'absolute', zIndex: zIndex - 1 - i, left: 0, top: 0, width, height},
+    });
     return (
       <div { ...this.handlers } style={{width, height}}>
-        { React.Children.map(this.props.children, (child, i) =>
-            React.cloneElement(child, { ...this.props, width, height, model,
-              style: {position: 'absolute', zIndex: zIndex - 1 - i, left: 0, top: 0, width, height} })
-          )
-        }
+        { React.Children.map(children, (child, i) => React.cloneElement(child, childProps(i))) }
         <svg width={width} height={height} style={{position: 'absolute', zIndex, left: 0, top: 0, width, height}}>
           { this.selection() }
         </svg>

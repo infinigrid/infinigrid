@@ -30,6 +30,7 @@
     "babel-register": "^6.11.6",
     "babelify": "^7.3.0",
     "dotenv": "^2.0.0",
+    "html-webpack-plugin": "^2.22.0",
     "mocha": "^3.0.2",
     "uglify-js": "^2.7.0",
     "webpack": "^1.13.1"

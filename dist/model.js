@@ -8,6 +8,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
+exports.windowViewport = windowViewport;
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -59,6 +61,10 @@ function _distanceBetweenCells(transform) {
   return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 }
 
+function windowViewport() {
+  return [0, 0, window.innerWidth, window.innerHeight];
+}
+
 var Model = exports.Model = function () {
   function Model() {
     _classCallCheck(this, Model);
@@ -67,24 +73,27 @@ var Model = exports.Model = function () {
   _createClass(Model, [{
     key: 'tap',
     value: function tap(cb) {
-      cb(this);
-      return this;
+      var o = Object.assign(new Model(), this);
+      cb(o);
+      return o;
     }
   }, {
     key: 'distanceBetweenCells',
     value: function distanceBetweenCells() {
-      _distanceBetweenCells(this.transform);
+      return _distanceBetweenCells(this.transform);
     }
   }, {
     key: 'randomizeMap',
-    value: function randomizeMap(width) {
-      var height = arguments.length <= 1 || arguments[1] === undefined ? width : arguments[1];
-
-      var data = new Uint8Array(width * height * 4);
+    value: function randomizeMap(N) {
+      var data = new Uint8Array(N * N * 4);
       window.crypto.getRandomValues(data);
-      for (var i = 0; i < width * height; ++i) {
+      for (var i = 0; i < N * N; ++i) {
+        data[i * 4 + 0] = 255 * Math.random();
+        data[i * 4 + 1] = 255 * Math.random();
+        data[i * 4 + 2] = 255 * Math.random();
         data[i * 4 + 3] = 255;
-      }var map = { width: width, height: height, data: data };
+      }
+      var map = { width: N, height: N, N: N, data: data };
       return Object.assign(new Model(), this, { map: map });
     }
   }, {
@@ -198,7 +207,9 @@ var Model = exports.Model = function () {
     }
   }, {
     key: 'fitNCellsInViewport',
-    value: function fitNCellsInViewport(N, viewport) {
+    value: function fitNCellsInViewport(N) {
+      var viewport = arguments.length <= 1 || arguments[1] === undefined ? windowViewport() : arguments[1];
+
       var _viewport2 = _slicedToArray(viewport, 4);
 
       var w = _viewport2[2];
@@ -210,7 +221,9 @@ var Model = exports.Model = function () {
     }
   }, {
     key: 'fitCellInViewport',
-    value: function fitCellInViewport(cell, viewport) {
+    value: function fitCellInViewport(cell) {
+      var viewport = arguments.length <= 1 || arguments[1] === undefined ? windowViewport() : arguments[1];
+
       var _cell = _slicedToArray(cell, 2);
 
       var q = _cell[0];
@@ -220,12 +233,16 @@ var Model = exports.Model = function () {
     }
   }, {
     key: 'fitMapInViewport',
-    value: function fitMapInViewport(viewport) {
+    value: function fitMapInViewport() {
+      var viewport = arguments.length <= 0 || arguments[0] === undefined ? windowViewport() : arguments[0];
+
       return this.fitNCellsInViewport(this.map.width, viewport);
     }
   }, {
     key: 'centerOnCell',
-    value: function centerOnCell(cell, viewport) {}
+    value: function centerOnCell(cell) {
+      var viewport = arguments.length <= 1 || arguments[1] === undefined ? windowViewport() : arguments[1];
+    }
   }, {
     key: 'fitRectInViewport',
     value: function fitRectInViewport(rect, viewport) {
@@ -317,6 +334,8 @@ var Model = exports.Model = function () {
 Model.prototype.transform = mat2d.create();
 Model.prototype.map = null; //{width: 1, height: 1, data: new Uint8Array([0, 0, 0, 255])};
 
+Model.prototype.repeat = 'repeat'; // 'repeat', 'repeat-q', 'repeat-s', 'none'
+
 // Grid
 Model.prototype.gridSize = 0.05;
 Model.prototype.gridColor = [1.0, 1.0, 1.0];
@@ -333,7 +352,7 @@ Model.prototype._gridColorStrategy = function () {
 
 // Zoom
 Model.prototype.zoomMin = 1; // Cells will be at least one pixel apart
-Model.prototype.zoomMax = 1024; // Cells will at most be 128 pixels apart
+Model.prototype.zoomMax = 1024; // Cells will at most be 1024 pixels apart
 Model.prototype._zoomStrategy = function (newTransform) {
   var d = _distanceBetweenCells(newTransform);
   if (d < this.zoomMin || d > this.zoomMax) return this.transform;else return newTransform;

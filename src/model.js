@@ -16,12 +16,16 @@ function distanceBetweenCells(transform) {
   return Math.sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
 }
 
+export function windowViewport() {
+  return [0,0,window.innerWidth, window.innerHeight];
+}
 
 export class Model {
 
   tap(cb) {
-    cb(this);
-    return this;
+    const o = Object.assign(new Model(), this);
+    cb(o);
+    return o;
   }
 
   get gridSizeStrategy() {
@@ -49,15 +53,29 @@ export class Model {
   }
 
   distanceBetweenCells() {
-    distanceBetweenCells(this.transform);
+    return distanceBetweenCells(this.transform);
   }
 
-  randomizeMap(width, height = width) {
-    const data = new Uint8Array(width * height * 4);
-    window.crypto.getRandomValues(data);
-    for (let i = 0;i < width * height;++i) data[i * 4 + 3] = 255;
-    const map = {width, height, data};
-    return Object.assign(new Model(), this, {map});
+  randomizeMap(N) {
+    const data = new Uint8Array(N * N * 4);
+    for (let i = 0;i < N*N;++i) {
+      data[i * 4 + 0] = 255 * Math.random();
+      data[i * 4 + 1] = 255 * Math.random();
+      data[i * 4 + 2] = 255 * Math.random();
+      data[i * 4 + 3] = 255;
+    }
+    const map = {width: N, height: N, N, data};
+    return Object.assign(new Model(), this, { map });
+  }
+
+  mapFromArray(N, data) {
+    const map = {
+      N,
+      width:  N,
+      height: N,
+      data: new Uint8Array(data),
+    };
+    return Object.assign(new Model(), this, { map });
   }
 
   mapFromImage(width, height, image) {
@@ -170,7 +188,7 @@ export class Model {
     return Object.assign(new Model(), this, { map });
   }
 
-  fitNCellsInViewport(N, viewport) {
+  fitNCellsInViewport(N, viewport = windowViewport()) {
     const [ , , w, h] = viewport;
     const K = Math.sqrt(3);
     const transform = mat2d.fromValues(
@@ -181,16 +199,16 @@ export class Model {
     return Object.assign(new Model(), this, {transform});
   }
 
-  fitCellInViewport(cell, viewport) {
+  fitCellInViewport(cell, viewport = windowViewport()) {
     const [q, r] = cell;
     return this.fitNCellsInViewport(2, viewport);
   }
 
-  fitMapInViewport(viewport) {
+  fitMapInViewport(viewport = windowViewport()) {
     return this.fitNCellsInViewport(this.map.width, viewport);
   }
 
-  centerOnCell(cell, viewport) {
+  centerOnCell(cell, viewport = windowViewport()) {
   }
 
   fitRectInViewport(rect,  viewport) {
@@ -228,6 +246,8 @@ export class Model {
 Model.prototype.transform = mat2d.create();
 Model.prototype.map       = null; //{width: 1, height: 1, data: new Uint8Array([0, 0, 0, 255])};
 
+Model.prototype.repeat    = 'repeat'; // 'repeat', 'repeat-q', 'repeat-s', 'none'
+
 // Grid
 Model.prototype.gridSize  = 0.05;
 Model.prototype.gridColor = [1.0, 1.0, 1.0];
@@ -244,7 +264,7 @@ Model.prototype._gridColorStrategy = function () {
 
 // Zoom
 Model.prototype.zoomMin = 1;   // Cells will be at least one pixel apart
-Model.prototype.zoomMax = 1024; // Cells will at most be 128 pixels apart
+Model.prototype.zoomMax = 1024; // Cells will at most be 1024 pixels apart
 Model.prototype._zoomStrategy = function(newTransform) {
   const d = distanceBetweenCells(newTransform);
   if (d < this.zoomMin || d > this.zoomMax) return this.transform;

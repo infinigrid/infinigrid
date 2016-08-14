@@ -18,7 +18,7 @@ var React = require('react');
 
 var _require = require('gl-matrix');
 
-var mat2d = _require.mat2d;
+var vec2 = _require.vec2;
 
 var Viewport = exports.Viewport = function (_React$Component) {
   _inherits(Viewport, _React$Component);
@@ -126,18 +126,28 @@ var Viewport = exports.Viewport = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
-
       var width = this.state.width;
       var height = this.state.height;
       var zIndex = this.props.zIndex || 0;
       var model = this.state.model;
+      var children = this.props.children;
+      var transform = function transform(point) {
+        return vec2.transformMat2d([,,], point, model.transform);
+      };
+      var childProps = function childProps(i) {
+        return {
+          width: width,
+          height: height,
+          model: model,
+          transform: transform,
+          style: { position: 'absolute', zIndex: zIndex - 1 - i, left: 0, top: 0, width: width, height: height }
+        };
+      };
       return React.createElement(
         'div',
         _extends({}, this.handlers, { style: { width: width, height: height } }),
-        React.Children.map(this.props.children, function (child, i) {
-          return React.cloneElement(child, _extends({}, _this2.props, { width: width, height: height, model: model,
-            style: { position: 'absolute', zIndex: zIndex - 1 - i, left: 0, top: 0, width: width, height: height } }));
+        React.Children.map(children, function (child, i) {
+          return React.cloneElement(child, childProps(i));
         }),
         React.createElement(
           'svg',

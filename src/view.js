@@ -46,6 +46,7 @@ export class View extends React.Component {
     const canvas = this.canvas;
     const gl = canvas.getContext("webgl");
 
+    this.model = {};
     if (!gl) return;
 
     const devicePixelRatio = window.devicePixelRatio || 1;
@@ -97,7 +98,9 @@ export class View extends React.Component {
     this.shaderProgram = shaderProgram;
   }
 
-  update(width, height, {transform, map, gridColorStrategy, gridSizeStrategy}) {
+  update(width, height, model) {
+    if (!model) return;
+    const { transform, map } = model;
     const gl = this.canvas.getContext("webgl");
     if (!gl) return;
 
@@ -112,17 +115,25 @@ export class View extends React.Component {
     const [x2, y2] = vec2.transformMat2d([,,], [1, 1], transform);
     const d = Math.sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
 
-    gl.uniform4f(gl.getUniformLocation(this.shaderProgram, "u_EDGE_COLOR"), ... gridColorStrategy() );
-    gl.uniform1f(gl.getUniformLocation(this.shaderProgram, "u_EDGE"), gridSizeStrategy());
+    gl.uniform4f(gl.getUniformLocation(this.shaderProgram, "u_EDGE_COLOR"), ... model.gridColorStrategy() );
+    gl.uniform1f(gl.getUniformLocation(this.shaderProgram, "u_EDGE"), model.gridSizeStrategy());
 
     if (!map) return;
-    if (map != this.map) {
+    if (model.map != this.model.map) {
+
+      if (model.repeat != this.model.repeat ) {
+        const mode = model.repeat;
+        const modeS = mode == 'repeat' || mode == 'repeat-q' ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+        const modeT = mode == 'repeat' || mode == 'repeat-r' ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, modeS);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, modeT);
+      }
+
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, map.width, map.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, map.data);
       gl.uniform1i(gl.getUniformLocation(this.shaderProgram, "u_N"), map.width);
-      this.map = map;
     }
-
     gl.drawArrays(gl.TRIANGLES, 0, 6);
+    this.model = model;
   }
 
   shouldComponentUpdate() {
