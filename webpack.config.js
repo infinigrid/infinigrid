@@ -1,13 +1,16 @@
+const glob = require('glob').sync;
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const template = 'example/template.html';
 
-const entries = {
-  simple:   './example/simple.js',
-  overlay: './example/overlay.js',
-};
+const entries = glob( path.join(__dirname, 'example', '*.js') )
+  .reduce( (entries, name) => {
+    entries[path.basename(name, '.js')] = name;
+    return entries;
+  }, {});
+
 const plugins = Object.keys(entries).map(name =>
   new HtmlWebpackPlugin({template, filename: name + '.html', chunks: [name]})
 );
