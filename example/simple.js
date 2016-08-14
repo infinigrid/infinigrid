@@ -1,11 +1,12 @@
-const { Viewport, View, Model } = require('../src');
+const { Viewport, View, Model } = require('infinigrid');
 
 const React = require('react');
 const { render } = require('react-dom');
 
-const div = document.createElement('div');
+const model = new Model().randomizeMap(16).fitCellInViewport([0,0]);
+
 render((
-  <Viewport model={new Model().randomizeMap(16).fitCellInViewport([0,0])}>
+  <Viewport model={model}>
     <View/>
   </Viewport>
-), div, () => document.body.appendChild(div));
+), document.getElementById('contents'));
