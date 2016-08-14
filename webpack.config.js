@@ -1,10 +1,21 @@
+const path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const template = 'example/template.html';
+
+const entries = {
+  simple:   './example/simple.js',
+  overlay: './example/overlay.js',
+};
+const plugins = Object.keys(entries).map(name =>
+  new HtmlWebpackPlugin({template, filename: name + '.html', chunks: [name]})
+);
 
 module.exports = {
-  entry: './example/overlay.js',
+  entry: entries,
   output: {
-    filename: './build/bundle.js'
+    path: path.join(__dirname, 'build'),
+    filename: '[name].js',
   },
   devtool: 'source-map',
   module: {
@@ -14,7 +25,5 @@ module.exports = {
       loader: 'babel-loader',
     }]
   },
-  plugins: [
-    new HtmlWebpackPlugin({ filename: './build/index.html', template: './example/template.html'}),
-  ],
+  plugins
 };
