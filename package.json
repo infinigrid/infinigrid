@@ -6,11 +6,12 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist",
+    "doc": "gitbook build",
     "example": "webpack",
     "test": "mocha --compilers js:babel-register",
     "preversion": "npm test",
     "version": "npm run build",
-    "postversion": "git push && git push --tags && npm publish"
+    "postversion": "git push && git push --tags && npm publish && "
   },
   "repository": "infinigrid/infinigrid",
   "author": "John Susi <john@susi.se> (https://github.com/johnsusi/)",
@@ -30,6 +31,8 @@
     "babel-register": "^6.11.6",
     "babelify": "^7.3.0",
     "dotenv": "^2.0.0",
+    "gh-pages": "^0.11.0",
+    "gitbook-cli": "^2.3.0",
     "html-webpack-plugin": "^2.22.0",
     "mocha": "^3.0.2",
     "uglify-js": "^2.7.0",
