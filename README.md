@@ -9,3 +9,7 @@ https://infinigrid.github.io/
 ```
 $ npm run example
 ```
+
+## Read the documentation
+
+https://infinigrid.github.io/infinigrid
