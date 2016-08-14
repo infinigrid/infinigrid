@@ -1,4 +1,11 @@
 # infinigrid
 Infiniteˣ hexagon grid
 
-https://johnsusi.github.io/infinigrid/
+https://infinigrid.github.io/
+
+
+## Build examples
+
+```
+$ npm run example
+```

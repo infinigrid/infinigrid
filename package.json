@@ -6,17 +6,17 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist",
-    "bundle": "webpack",
+    "example": "webpack",
     "test": "mocha --compilers js:babel-register",
     "preversion": "npm test",
-    "version": "npm run build && npm run bundle",
+    "version": "npm run build",
     "postversion": "git push && git push --tags && npm publish"
   },
   "repository": "johnsusi/infinigrid",
   "author": "John Susi <john@susi.se> (https://github.com/johnsusi/)",
   "license": "MIT",
-  "bugs": "https://github.com/johnsusi/infinigrid/issues",
-  "homepage": "https://github.com/johnsusi/infinigrid#readme",
+  "bugs": "https://github.com/infinigrid/infinigrid/issues",
+  "homepage": "https://github.com/infinigrid/infinigrid#readme",
   "files": [
     "dist"
   ],
@@ -47,6 +47,8 @@
     ]
   },
   "dependencies": {
-    "gl-matrix": "^2.3.2"
+    "gl-matrix": "^2.3.2",
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0"
   }
 }

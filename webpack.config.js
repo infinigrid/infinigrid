@@ -12,6 +12,12 @@ const plugins = Object.keys(entries).map(name =>
   new HtmlWebpackPlugin({template, filename: name + '.html', chunks: [name]})
 );
 
+if (process.env.NODE_ENV == 'production') {
+  plugins.unshift(
+    new webpack.DefinePlugin({ 'process.env': { NODE_ENV: JSON.stringify('production') } }),
+    new webpack.optimize.UglifyJsPlugin({minimize: true})
+  );
+}
 module.exports = {
   entry: entries,
   output: {
@@ -26,12 +32,5 @@ module.exports = {
       loader: 'babel-loader',
     }]
   },
-  plugins: [
-    new webpack.optimize.UglifyJsPlugin({minimize: true}),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }
-    })
-  ].concat(plugins),
+  plugins,
 };
