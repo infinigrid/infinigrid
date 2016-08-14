@@ -15,7 +15,7 @@ const range = (q0,r0,q1,r1) =>
   }
 
 const Text = ({x, y, text}) =>
-  <text x={x} y={y} fill="white" textAnchor="middle" alignmentBaseline="middle" fontFamily="Hack">{text}</text>
+  <text x={x} y={y} fill="white" textAnchor="middle" alignmentBaseline="middle">{text}</text>
 
 const Grid = ({width, height, transform}) =>
   <g>
@@ -33,12 +33,10 @@ const Path = ({points, transform, size}) =>
 
 const Overlay = ({width, height, style, model, transform, children, size = model.distanceBetweenCells() / 16 }) =>
   <svg width={width} height={height} style={style}>
-    <g strokeWidth={size} fontSize={size} fontFamily="Hack">
+    <g strokeWidth={size} fontSize={size}>
       { React.Children.map(children, (child, i) => React.cloneElement(child, { model, transform, size } ) ) }
     </g>
   </svg>
-
-
 
 
 const model = new Model()

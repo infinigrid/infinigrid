@@ -1,5 +1,6 @@
 const path = require('path');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const template = 'example/template.html';
 
@@ -17,7 +18,7 @@ module.exports = {
     path: path.join(__dirname, 'build'),
     filename: '[name].js',
   },
-  devtool: 'source-map',
+  devtool: 'cheap-module-source-map',
   module: {
     loaders: [{
       test: /\.js$/,
@@ -25,5 +26,12 @@ module.exports = {
       loader: 'babel-loader',
     }]
   },
-  plugins
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({minimize: true}),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production')
+      }
+    })
+  ].concat(plugins),
 };
