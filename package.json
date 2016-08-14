@@ -12,11 +12,11 @@
     "version": "npm run build",
     "postversion": "git push && git push --tags && npm publish"
   },
-  "repository": "johnsusi/infinigrid",
+  "repository": "infinigrid/infinigrid",
   "author": "John Susi <john@susi.se> (https://github.com/johnsusi/)",
   "license": "MIT",
   "bugs": "https://github.com/infinigrid/infinigrid/issues",
-  "homepage": "https://github.com/infinigrid/infinigrid#readme",
+  "homepage": "https://infinigrid.github.io",
   "files": [
     "dist"
   ],
