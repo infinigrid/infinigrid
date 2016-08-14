@@ -86,7 +86,6 @@ var Model = exports.Model = function () {
     key: 'randomizeMap',
     value: function randomizeMap(N) {
       var data = new Uint8Array(N * N * 4);
-      window.crypto.getRandomValues(data);
       for (var i = 0; i < N * N; ++i) {
         data[i * 4 + 0] = 255 * Math.random();
         data[i * 4 + 1] = 255 * Math.random();
@@ -94,6 +93,17 @@ var Model = exports.Model = function () {
         data[i * 4 + 3] = 255;
       }
       var map = { width: N, height: N, N: N, data: data };
+      return Object.assign(new Model(), this, { map: map });
+    }
+  }, {
+    key: 'mapFromArray',
+    value: function mapFromArray(N, data) {
+      var map = {
+        N: N,
+        width: N,
+        height: N,
+        data: new Uint8Array(data)
+      };
       return Object.assign(new Model(), this, { map: map });
     }
   }, {
