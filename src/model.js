@@ -22,8 +22,13 @@ export function windowViewport() {
 
 export class Model {
 
+
+  clone(props = null) {
+    return Object.assign(new this.constructor(), this, props);
+  }
+
   tap(cb) {
-    const o = Object.assign(new Model(), this);
+    const o = this.clone();
     cb(o);
     return o;
   }
@@ -65,7 +70,7 @@ export class Model {
       data[i * 4 + 3] = 255;
     }
     const map = {width: N, height: N, N, data};
-    return Object.assign(new Model(), this, { map });
+    return this.clone({ map });
   }
 
   mapFromArray(N, data) {
@@ -75,7 +80,7 @@ export class Model {
       height: N,
       data: new Uint8Array(data),
     };
-    return Object.assign(new Model(), this, { map });
+    return this.clone({ map });
   }
 
   mapFromImage(width, height, image) {
@@ -185,7 +190,7 @@ export class Model {
     //   }
     // }
     const map = {width, height, data};
-    return Object.assign(new Model(), this, { map });
+    return this.clone({ map });
   }
 
   fitNCellsInViewport(N, viewport = windowViewport()) {
@@ -196,7 +201,7 @@ export class Model {
       h / (K*N),  h / N,
       w / 2,      h / 2
     );
-    return Object.assign(new Model(), this, {transform});
+    return this.clone({transform});
   }
 
   fitCellInViewport(cell, viewport = windowViewport()) {
@@ -219,7 +224,7 @@ export class Model {
     const s  = h / (y2 - y1);
     const transform = mat2d.mul(mat2d.create(),
       [s, 0, 0, s, s*(1-dx) + w/2, s*(1-dy) + h/2], this.transform);
-    return Object.assign(new Model(), this, {transform});
+    return this.clone({transform});
   }
 
   zoomToPoint(zoom, point) {
@@ -230,13 +235,13 @@ export class Model {
     mat2d.mul(transform, [s, 0, 0, s, 0, 0], transform);
     mat2d.mul(transform, [1, 0, 0, 1,x,y], transform);
 
-    return Object.assign(new Model(), this, {transform: this.zoomStrategy(transform) });
+    return this.clone({transform: this.zoomStrategy(transform) });
   }
 
   pan(dx, dy) {
     const transform = mat2d.create();
     mat2d.mul(transform, [1, 0, 0, 1, dx, dy], this.transform);
-    return Object.assign(new Model(), this, {transform});
+    return this.clone({transform});
   }
 
 }
