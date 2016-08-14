@@ -1,7 +1,7 @@
 {
   "name": "infinigrid",
   "productName": "Infinigrid",
-  "version": "1.1.2",
+  "version": "1.1.1",
   "description": "Infiniteˣ hexagon grid",
   "main": "dist/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "test": "mocha --compilers js:babel-register",
     "preversion": "npm test",
     "version": "npm run build",
-    "postversion": "git push && git push --tags && npm publish && "
+    "postversion": "git push && git push --tags && npm publish && npm run dock && gh-pages -d _book"
   },
   "repository": "infinigrid/infinigrid",
   "author": "John Susi <john@susi.se> (https://github.com/johnsusi/)",
