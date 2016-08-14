@@ -6,12 +6,12 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src --out-dir dist",
-    "doc": "gitbook build",
-    "example": "webpack",
+    "build:doc": "gitbook build",
+    "build:example": "webpack",
     "test": "mocha --compilers js:babel-register",
     "preversion": "npm test",
     "version": "npm run build",
-    "postversion": "git push && git push --tags && npm publish && npm run dock && gh-pages -d _book"
+    "postversion": "git push && git push --tags && npm publish && npm run build:doc && gh-pages -d _book"
   },
   "repository": "infinigrid/infinigrid",
   "author": "John Susi <john@susi.se> (https://github.com/johnsusi/)",
