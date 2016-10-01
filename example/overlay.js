@@ -1,4 +1,4 @@
-const { Model, View, Viewport } = require('../src');
+const { Model, View, Viewport } = require('..');
 
 const React      = require('react');
 const { render } = require('react-dom');

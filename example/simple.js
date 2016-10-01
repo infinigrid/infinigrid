@@ -1,6 +1,6 @@
-const { Viewport, View, Model } = require('infinigrid');
+const { Viewport, View, Model } = require('..');
 
-const React = require('react');
+const React      = require('react');
 const { render } = require('react-dom');
 
 const model = new Model().randomizeMap(16).fitCellInViewport([0,0]);
