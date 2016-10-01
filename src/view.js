@@ -2,8 +2,7 @@ const React = require('react');
 
 const { vec2, mat2d, mat3 } = require('gl-matrix');
 
-const vs = require('./vs').default;
-const fs = require('./fs').default;
+const fs = require('fs');
 
 function compileShader(gl, type, source) {
 
@@ -42,6 +41,17 @@ function buildBuffer(gl, target, usage, data) {
 
 export class View extends React.Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      vertexShaderSource:   fs.readFileSync(__dirname + '/vs.glsl', 'utf-8'),
+      fragmentShaderSource: fs.readFileSync(__dirname + '/fs.glsl', 'utf-8'),
+    };
+
+
+  }
+
   init(w, h) {
     const canvas = this.canvas;
     const gl = canvas.getContext("webgl");
@@ -68,7 +78,7 @@ export class View extends React.Component {
     ]);
 
 
-    const shaderProgram = buildProgram(gl, vs, fs);
+    const shaderProgram = buildProgram(gl, this.state.vertexShaderSource, this.state.fragmentShaderSource);
     gl.useProgram(shaderProgram);
 
     var xy = gl.getAttribLocation(shaderProgram, "a_xy");
