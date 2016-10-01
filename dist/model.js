@@ -71,9 +71,16 @@ var Model = exports.Model = function () {
   }
 
   _createClass(Model, [{
+    key: 'clone',
+    value: function clone() {
+      var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      return Object.assign(new this.constructor(), this, props);
+    }
+  }, {
     key: 'tap',
     value: function tap(cb) {
-      var o = Object.assign(new Model(), this);
+      var o = this.clone();
       cb(o);
       return o;
     }
@@ -93,7 +100,7 @@ var Model = exports.Model = function () {
         data[i * 4 + 3] = 255;
       }
       var map = { width: N, height: N, N: N, data: data };
-      return Object.assign(new Model(), this, { map: map });
+      return this.clone({ map: map });
     }
   }, {
     key: 'mapFromArray',
@@ -104,7 +111,7 @@ var Model = exports.Model = function () {
         height: N,
         data: new Uint8Array(data)
       };
-      return Object.assign(new Model(), this, { map: map });
+      return this.clone({ map: map });
     }
   }, {
     key: 'mapFromImage',
@@ -213,12 +220,12 @@ var Model = exports.Model = function () {
       //   }
       // }
       var map = { width: width, height: height, data: data };
-      return Object.assign(new Model(), this, { map: map });
+      return this.clone({ map: map });
     }
   }, {
     key: 'fitNCellsInViewport',
     value: function fitNCellsInViewport(N) {
-      var viewport = arguments.length <= 1 || arguments[1] === undefined ? windowViewport() : arguments[1];
+      var viewport = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : windowViewport();
 
       var _viewport2 = _slicedToArray(viewport, 4);
 
@@ -227,12 +234,12 @@ var Model = exports.Model = function () {
 
       var K = Math.sqrt(3);
       var transform = mat2d.fromValues(h / (K * N), -h / N, h / (K * N), h / N, w / 2, h / 2);
-      return Object.assign(new Model(), this, { transform: transform });
+      return this.clone({ transform: transform });
     }
   }, {
     key: 'fitCellInViewport',
     value: function fitCellInViewport(cell) {
-      var viewport = arguments.length <= 1 || arguments[1] === undefined ? windowViewport() : arguments[1];
+      var viewport = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : windowViewport();
 
       var _cell = _slicedToArray(cell, 2);
 
@@ -244,14 +251,14 @@ var Model = exports.Model = function () {
   }, {
     key: 'fitMapInViewport',
     value: function fitMapInViewport() {
-      var viewport = arguments.length <= 0 || arguments[0] === undefined ? windowViewport() : arguments[0];
+      var viewport = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : windowViewport();
 
       return this.fitNCellsInViewport(this.map.width, viewport);
     }
   }, {
     key: 'centerOnCell',
     value: function centerOnCell(cell) {
-      var viewport = arguments.length <= 1 || arguments[1] === undefined ? windowViewport() : arguments[1];
+      var viewport = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : windowViewport();
     }
   }, {
     key: 'fitRectInViewport',
@@ -272,7 +279,7 @@ var Model = exports.Model = function () {
       var dy = (y1 + y2) / 2;
       var s = h / (y2 - y1);
       var transform = mat2d.mul(mat2d.create(), [s, 0, 0, s, s * (1 - dx) + w / 2, s * (1 - dy) + h / 2], this.transform);
-      return Object.assign(new Model(), this, { transform: transform });
+      return this.clone({ transform: transform });
     }
   }, {
     key: 'zoomToPoint',
@@ -289,14 +296,14 @@ var Model = exports.Model = function () {
       mat2d.mul(transform, [s, 0, 0, s, 0, 0], transform);
       mat2d.mul(transform, [1, 0, 0, 1, x, y], transform);
 
-      return Object.assign(new Model(), this, { transform: this.zoomStrategy(transform) });
+      return this.clone({ transform: this.zoomStrategy(transform) });
     }
   }, {
     key: 'pan',
     value: function pan(dx, dy) {
       var transform = mat2d.create();
       mat2d.mul(transform, [1, 0, 0, 1, dx, dy], this.transform);
-      return Object.assign(new Model(), this, { transform: transform });
+      return this.clone({ transform: transform });
     }
   }, {
     key: 'gridSizeStrategy',

@@ -69,7 +69,7 @@ var View = exports.View = function (_React$Component) {
   function View() {
     _classCallCheck(this, View);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(View).apply(this, arguments));
+    return _possibleConstructorReturn(this, (View.__proto__ || Object.getPrototypeOf(View)).apply(this, arguments));
   }
 
   _createClass(View, [{

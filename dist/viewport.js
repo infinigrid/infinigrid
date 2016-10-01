@@ -26,7 +26,7 @@ var Viewport = exports.Viewport = function (_React$Component) {
   function Viewport(props) {
     _classCallCheck(this, Viewport);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Viewport).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Viewport.__proto__ || Object.getPrototypeOf(Viewport)).call(this, props));
 
     _this.state = {
       model: props.model,
