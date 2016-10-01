@@ -11,6 +11,8 @@ const entries = glob( path.join(__dirname, 'example', '*.js') )
     return entries;
   }, {});
 
+entries['infinigrid'] = path.join(__dirname, 'src', 'index.js' );
+
 const plugins = Object.keys(entries).map(name =>
   new HtmlWebpackPlugin({template, filename: name + '.html', chunks: [name]})
 );
@@ -27,13 +29,29 @@ module.exports = {
     path: path.join(__dirname, 'build'),
     filename: '[name].js',
   },
-  devtool: 'cheap-module-source-map',
+  devtool: 'source-map',
   module: {
-    loaders: [{
-      test: /\.js$/,
-      exclude: /node_modules/,
-      loader: 'babel-loader',
-    }]
+    loaders: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader'
+      },
+    ],
+    postLoaders: [
+      {
+        test: /\.js$/,
+        loader: 'transform?brfs',
+      },
+    ]
+  },
+  node: {
+    fs: 'empty',
   },
   plugins,
+  resolve: {
+    alias: {
+      infinigrid: path.join(__dirname, 'src/index.js')
+    }
+  }
 };
