@@ -4,6 +4,18 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _builder = require('./builder');
+
+Object.keys(_builder).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _builder[key];
+    }
+  });
+});
+
 var _model = require('./model');
 
 Object.keys(_model).forEach(function (key) {
